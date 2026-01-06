@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>City Biking Music</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/bicycle-100.png" />
+        <link rel="icon" type="image/x-icon" href="assets/usdotbike.png" />
         <!-- Custom Google font-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,30 +23,92 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
                 <div class="container px-5">
                     <a class="navbar-brand" href="index.html"><span class="text-primary font-courier">[city biking music]</span></a>
-                </div>
-            </nav>
-            <!-- Header-->
-            <header class="py-5">
-                <div class="container px-5 pb-5">
-                    <div class="row gx-5 align-items-center">
-                        <div class="col-xxl-5">
-                            <!-- Header text content-->
-                            <div class="text-center text-xxl-start">
-                                <div class="badge bg-gradient-black-to-red text-white mb-4"><div class="text-uppercase">Recording &middot; Production &middot; Rehearsal Space</div></div>
-                                <div class="fs-3 fw-light text-muted">We will be up and running shortly...</div>
-                                <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient-black-to-red d-inline">Site Under Construction</span></h1>
-                            </div>
-                        </div>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small">
+                            <li class="nav-item"><a class="nav-link" href="book.html">[About Us]</a></li>
+                            <li class="nav-item"><a class="nav-link" href="book.html">[Book Time]</a></li>
+                            <!--<li class="nav-item"><a class="nav-link" href="team.html">Team</a></li>-->
+                            <li class="nav-item"><a class="nav-link" href="services.html">[Mixing & Mastering Services]</a></li>
+                            <li class="nav-item"><a class="nav-link" href="contact.html">[Contact Us]</a></li>
+                        </ul>
                     </div>
                 </div>
-            </header>
+            </nav>
+           <!-- Header -->
+<header class="py-5">
+    <div class="container px-5 pb-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-xxl-5">
+                <!-- Header text content -->
+                <div class="text-center text-xxl-start">
+                    <h1 class="display-3 fw-bolder mb-4"><span class="text-gradient-black-to-red d-inline">An Independent Music Studio, Built to Capture Your Creative Flow</span></h1>
+                    <p class="fs-5 text-muted mb-4">City Biking Music is a recording and production studio built for producers, vocalists, bands, and creatives who want to achieve a professional sound in a chill, inspiring space.</p>
+                    <p class="fs-5 text-muted mb-4">Located in the heart of Long Island City.</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start">
+                        <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="book.html">Book Time</a>
+                        <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="services.html">Explore Services</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-7 d-flex justify-content-center mt-5 mt-xxl-0">
+                <div id="studio-slideshow" class="slideshow-container rounded-3 shadow-lg">
+                    <img class="slide active" src="assets/pics/IMG_1825.jpg" alt="Studio view 1" />
+                    <img class="slide" src="assets/pics/IMG_1571.jpg" alt="Studio view 2" />
+                    <img class="slide" src="assets/pics/IMG_0823.jpg" alt="Studio view 3" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const slides = document.querySelectorAll("#studio-slideshow .slide");
+        let current = 0;
+    
+        function showNextSlide() {
+            slides[current].classList.remove("active");
+            current = (current + 1) % slides.length;
+            slides[current].classList.add("active");
+        }
+    
+        setInterval(showNextSlide, 5000);
+    </script>
+</header>
+
+<!-- About Studio Section -->
+<!--<section class="bg-light py-5">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xxl-8">
+                <div class="text-center my-5">
+                    <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">What We Offer</span></h2>
+                    <p class="lead fw-light mb-4">Your go-to space for creating, refining, and finishing your sound.</p>
+                    <ul class="list-unstyled text-muted fs-5">
+                        <li>🎙️ Soundproof vocal booth for pristine vocal recordings</li>
+                        <li>🎸 Capture acoustic, electric, and bass guitars in a pro environment</li>
+                        <li>🎹 MIDI-ready setup for drums, keys, and synth work</li>
+                        <li>🧠 Full-scale mixing, mastering, vocal tuning, and editing services</li>
+                        <li>🥁 Rehearsal space for bands to vibe and prep</li>
+                        <li>💻 Space for producers to finalize their projects in peace</li>
+                    </ul>
+                    <p class="text-muted mt-4">City Biking Music is inspired by the creative movement of New York. Different genres, voices, and stories — all riding the same streets and pushing our culture forward.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>-->
         </main>
         <!-- Footer-->
         <footer class="bg-white py-4 mt-auto">
             <div class="container px-5">
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; City Biking Music 2025</div></div>
-                  
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; City Biking Music 2026</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="#!">Privacy</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Terms</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Contact</a>
+                    </div>
                 </div>
             </div>
         </footer>
