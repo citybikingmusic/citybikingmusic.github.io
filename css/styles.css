@@ -7903,10 +7903,10 @@ textarea.form-control-lg {
   padding-left: 1.5rem !important;
 }
 
-.px-5 {
+/*.px-5 {
   padding-right: 3rem !important;
   padding-left: 3rem !important;
-}
+}*/
 
 .py-0 {
   padding-top: 0 !important;
@@ -7941,8 +7941,8 @@ textarea.form-control-lg {
   align-content: space-around;
   width: 100vw;
   height: 80vh;
-  /*padding-top: 3rem !important;
-  padding-bottom: 3rem !important;*/
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
 }
 
 .py-5a {
@@ -7952,9 +7952,9 @@ textarea.form-control-lg {
   justify-content: space-evenly;
   align-content: space-around;
   width: 100vw;
-  height: 30vh;
-  /*padding-top: 3rem !important;
-  padding-bottom: 3rem !important;*/
+  height: 23vh;
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
 }
 
 .py-5b {
@@ -11805,4 +11805,32 @@ html {
   left: 0;
   opacity: 1;
   z-index: 1;
+}
+
+@media (max-width: 550px) {
+  .big-container {
+      display: none;
+  }
+}
+@media (min-width: 550px) {
+  .small-container {
+      display: none;
+  }
+}
+/* Responsive iFrame */
+.responsive-iframe-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+.responsive-iframe-container iframe,   
+.responsive-iframe-container object,  
+.responsive-iframe-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
