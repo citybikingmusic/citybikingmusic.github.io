@@ -30,7 +30,7 @@
   </head>
 
   <body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0">
+    <main class="flex-shrink-0 page-bg">
       <!-- Navigation -->
       <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container px-5">
@@ -71,31 +71,23 @@
         </div>
       </nav>
 
-      <!-- Header -->
-      <header class="py-5a bg-light">
-        <div class="container px-5">
-          <div class="text-center">
-            <h1 class="display-5 fw-bolder mb-3">
-              <span class="text-gradient-black-to-red d-inline">
-                Book Studio Time
-              </span>
-            </h1>
-            <p class="fs-5 text-muted">Reserve your session.</p>
+      <section class="bg-fixed py-5">
+        <div class="container px-5 studio-section">
+          <!-- Title Block -->
+          <div class="section-title-card">
+            <h1 class="mb-0 fwb">[Book Your Session]</h1>
+          </div>
+          <!--Content Cards-->
+          <div class="content-card">
+            <p class="my-0">
+              <a href="contact.html">Talk to us</a> before booking your session.
+              When you are ready to book, use our appointment portal below.
+            </p>
           </div>
         </div>
-      </header>
-
-      <!-- Booking Section -->
-      <section class="py-5b">
+        <!--Booking Block-->
         <div class="container px-5">
           <div class="row justify-content-center">
-            <div class="col-lg-10 text-center mb-4">
-              <h2 class="fw-bolder mb-3">Book Your Session</h2>
-              <p class="text-muted">
-                Use our booking system to lock in your studio time.
-              </p>
-            </div>
-
             <div class="col-lg-10">
               <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
@@ -109,7 +101,7 @@
         </div>
       </section>
 
-      <!-- Calendar Section -->
+      <!-- Calendar Section
       <section class="py-5b bg-light">
         <div class="container px-5">
           <div class="row justify-content-center">
@@ -118,16 +110,6 @@
               <p class="text-muted">View our live studio calendar.</p>
             </div>
 
-            <!--<div class="col-lg-10">
-                    <div class="ratio ratio-16x9 shadow-sm rounded-3 overflow-hidden">
-                        <iframe
-                            src="https://calendar.google.com/calendar/embed?src=citybikingmusic%40gmail.com&ctz=America%2FNew_York&mode=WEEK&showTitle=0&showTabs=0&showCalendars=0&showPrint=0"
-                            style="border:0"
-                            frameborder="0"
-                            scrolling="no">
-                        </iframe>
-                    </div>
-                </div>-->
             <div class="responsive-iframe-container big-container">
               <iframe
                 src="https://calendar.google.com/calendar/embed?src=citybikingmusic%40gmail.com&ctz=America%2FNew_York&mode=WEEK&showTitle=0&showTabs=0&showCalendars=0&showPrint=0"
@@ -153,23 +135,27 @@
           </div>
         </div>
       </section>
-    </main>
+    </main> -->
 
     <!-- Footer -->
-    <footer class="bg-white py-4 mt-auto">
+    <footer class="py-4 site-footer">
       <div class="container px-5">
         <div
           class="row align-items-center justify-content-between flex-column flex-sm-row"
         >
           <div class="col-auto">
-            <div class="small m-0">Copyright &copy; City Biking Music 2026</div>
+            <div class="small m-0">
+              <mark>Copyright &copy; City Biking Music 2026</mark>
+            </div>
           </div>
           <div class="col-auto">
-            <a class="small" href="#!">Privacy</a>
-            <span class="mx-1">&middot;</span>
-            <a class="small" href="#!">Terms</a>
-            <span class="mx-1">&middot;</span>
-            <a class="small" href="contact.html">Contact</a>
+            <mark>
+              <a class="small" href="#!">Privacy</a>
+              <span class="mx-1">&middot;</span>
+              <a class="small" href="#!">Terms</a>
+              <span class="mx-1">&middot;</span>
+              <a class="small" href="#!">Contact</a></mark
+            >
           </div>
         </div>
       </div>

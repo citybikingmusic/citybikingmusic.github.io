@@ -30,7 +30,7 @@
   </head>
 
   <body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0">
+    <main class="flex-shrink-0 page-bg">
       <!-- Navigation -->
       <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container px-5">
@@ -72,32 +72,31 @@
       </nav>
 
       <!-- Header -->
-      <header class="py-5a bg-light">
-        <div class="container px-5">
-          <div class="text-center">
-            <h1 class="display-5 fw-bolder mb-3">
-              <span class="text-gradient-black-to-red d-inline">
-                Mixing & Mastering Services
-              </span>
-            </h1>
-            <p class="fs-5 text-muted">
-              Professional, release-ready sound — engineered with care, clarity,
-              and intention.
-            </p>
+      <section class="bg-fixed py-5">
+        <div class="container px-5 studio-section">
+          <!-- Title Block -->
+          <div class="section-title-card">
+            <h1 class="mb-0 fwb">[Production Services]</h1>
           </div>
-        </div>
-      </header>
-
-      <!-- Services Section -->
-      <section class="py-5b">
-        <div class="container px-5">
           <div class="row gx-5 justify-content-center">
+            <div class="content-card">
+              <p class="my-0">
+                Ready for post-production? Allow our team of engineers to help
+                you get your project over the finish line.
+              </p>
+              <br />
+              <p class="my-0">
+                The service list below is for individual songs only.
+                <a href="contact.html">Reach out to us</a> if you would like to
+                discuss a longer project.
+              </p>
+            </div>
             <!-- Mixing & Mastering Package -->
             <div class="col-lg-5 mb-5">
               <div class="card shadow-sm h-100 border-0">
                 <div class="card-body p-5 text-center">
                   <h3 class="fw-bolder mb-3">Mixing & Mastering ($300)</h3>
-                  <p class="text-muted mb-4">
+                  <p class="mb-4">
                     A complete mix & master of your track by an engineer from
                     our team, returned to you fully polished and ready for
                     digital distribution.
@@ -158,7 +157,7 @@
               <div class="card shadow-sm h-100 border-0">
                 <div class="card-body p-5 text-center">
                   <h3 class="fw-bolder mb-3">Mastering Only ($75)</h3>
-                  <p class="text-muted mb-4">
+                  <p class="mb-4">
                     A professional master of your finished mix, optimized for
                     loudness, clarity, and consistency across all platforms.
                   </p>
@@ -218,20 +217,24 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white py-4 mt-auto">
+    <footer class="py-4 site-footer">
       <div class="container px-5">
         <div
           class="row align-items-center justify-content-between flex-column flex-sm-row"
         >
           <div class="col-auto">
-            <div class="small m-0">Copyright &copy; City Biking Music 2026</div>
+            <div class="small m-0">
+              <mark>Copyright &copy; City Biking Music 2026</mark>
+            </div>
           </div>
           <div class="col-auto">
-            <a class="small" href="#!">Privacy</a>
-            <span class="mx-1">&middot;</span>
-            <a class="small" href="#!">Terms</a>
-            <span class="mx-1">&middot;</span>
-            <a class="small" href="contact.html">Contact</a>
+            <mark>
+              <a class="small" href="#!">Privacy</a>
+              <span class="mx-1">&middot;</span>
+              <a class="small" href="#!">Terms</a>
+              <span class="mx-1">&middot;</span>
+              <a class="small" href="#!">Contact</a></mark
+            >
           </div>
         </div>
       </div>
