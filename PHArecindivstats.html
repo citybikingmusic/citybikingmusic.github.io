@@ -1,0 +1,130 @@
+<!--
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title>Price List</title>
+	  <link rel="stylesheet" type="text/css" href="styles.css"/>
+	</head>
+	<body style="padding: 20px 40px;">
+	  <h1>Individual Statistics</h1>
+		<table id="indstats" class="display">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Rostered Team</th>
+                    <th>GP</th>
+					<th>G</th>
+                    <th>A</th>
+					<th>PTS</th>
+                    <th>PIM</th>
+				</tr>
+			</thead>
+		</table>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+        <script type="text/javascript" src="dataTables.js"></script>
+	
+        <!--paste web url link from google script to ajax below-->
+<!--<script>
+		new DataTable('#indstats', {
+			ajax: 'https://script.google.com/macros/s/AKfycbyKt1EtyS7DHtp9uF4wJKknyR22wA0ysbV9LEzCr3mzUx0Gc5_T5yDYWxDZyrfdzFg/exec',
+            width: "90%",
+    // You can also target specific columns for centering here
+            columnDefs: [
+                { targets: "_all", className: "dt-center" } 
+            ],
+			columns: [
+				{ data: '#' },
+				{ data: 'First Name' },
+				{ data: 'Last Name' },
+				{ data: 'Rostered Team' },
+                { data: 'GP' },
+				{ data: 'G' },
+				{ data: 'A' },
+				{ data: 'PTS' },
+                { data: 'PIM' }
+			]
+		});
+	</script>
+</body>
+</html>-->
+
+<!doctype html>
+<html>
+  <head>
+    <title>NYCPHA | Individual Statistics</title>
+    <link rel="stylesheet" type="text/css" href="NYCPHA-Rec/PHAstyles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="header">
+      <a href="https://nycpha.org/">
+        <img
+          src="NYCPHA-Rec/assets/nycpha logo.svg"
+          alt="NYCPHA Logo"
+          class="logo"
+        />
+      </a>
+    </div>
+
+    <div class="container">
+      <h1>Individual Statistics</h1>
+      <table id="indstats" class="display" style="width: 100%">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Rostered Team</th>
+            <th>GP</th>
+            <th>G</th>
+            <th>A</th>
+            <th>PTS</th>
+            <th>PIM</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-3.7.1.js"
+    ></script>
+    <script type="text/javascript" src="dataTables.js"></script>
+
+    <script>
+      new DataTable("#indstats", {
+        ajax: "https://script.google.com/macros/s/AKfycbyKt1EtyS7DHtp9uF4wJKknyR22wA0ysbV9LEzCr3mzUx0Gc5_T5yDYWxDZyrfdzFg/exec",
+        pageLength: 25,
+        order: [[7, "desc"]], // Keeps PTS (column 8) as default sort
+        ordering: true,
+        columnDefs: [
+          {
+            targets: "_all",
+            className: "dt-center",
+          },
+        ],
+        columns: [
+          { data: "#" },
+          { data: "First Name" },
+          { data: "Last Name" },
+          { data: "Rostered Team" },
+          { data: "GP" },
+          { data: "G" },
+          { data: "A" },
+          { data: "PTS" },
+          { data: "PIM" },
+        ],
+      });
+      // This listens for when the table finishes drawing and physically deletes the arrows
+      $("#indstats").on("draw.dt", function () {
+        $(".dt-column-order").remove();
+      });
+    </script>
+  </body>
+</html>
