@@ -264,18 +264,13 @@
         return url.replace('youtu.be/', 'youtube.com/embed/');
     }
 
-    // Google Drive - Direct Stream Logic
+    // NEW: Google Drive Handling
+    // Converts /file/d/ID/view to /video/layout/preview?id=ID
     if (url.includes('drive.google.com')) {
-        let fileId = "";
-        if (url.includes('/d/')) {
-            fileId = url.split('/d/')[1].split('/')[0];
-        } else if (url.includes('id=')) {
-            fileId = url.split('id=')[1].split('&')[0];
+        const driveIdMatch = url.match(/\/d\/(.+?)\/(view|edit|copy)/);
+        if (driveIdMatch && driveIdMatch[1]) {
+            return `https://drive.google.com/video/layout/preview?id=${driveIdMatch[1]}`;
         }
-        
-        // This is the direct stream link. It bypasses the Google Drive "Player UI"
-        // which is what usually triggers the CSP/404 errors on deployed sites.
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
     
     return url;
