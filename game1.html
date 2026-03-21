@@ -266,9 +266,15 @@
 
     // Handle Google Drive
     if (url.includes('drive.google.com')) {
-        // Extract the File ID
-        const fileId = url.split('/d/')[1].split('/')[0];
-        // The /preview endpoint is significantly more stable for cross-domain embedding
+        let fileId = "";
+        // Extract ID from standard link or viewer link
+        if (url.includes('/d/')) {
+            fileId = url.split('/d/')[1].split('/')[0];
+        } else if (url.includes('id=')) {
+            fileId = url.split('id=')[1].split('&')[0];
+        }
+        
+        // Use /preview for maximum compatibility and to prevent preload errors
         return `https://drive.google.com/file/d/${fileId}/preview`;
     }
     
@@ -283,15 +289,14 @@
         if (drawer.style.display === 'block') {
             drawer.style.display = 'none';
             drawer.innerHTML = `
-            <div class="video-wrapper">
-                <iframe 
-                    src="${embedUrl}" 
-                    allow="autoplay; fullscreen" 
-                    allowfullscreen="true" 
-                    webkitallowfullscreen="true" 
-                    mozallowfullscreen="true">
-                </iframe>
-            </div>`; 
+    <div class="video-wrapper" style="padding: 10px;">
+        <iframe 
+            src="${embedUrl}?autoplay=1" 
+            allowfullscreen 
+            allow="autoplay" 
+            loading="lazy">
+        </iframe>
+    </div>`; 
             btn.classList.remove('active');
         } else {
             // Close other open videos first (Optional but recommended)
