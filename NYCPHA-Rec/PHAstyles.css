@@ -974,3 +974,113 @@ h1 {
     text-decoration: underline;
     text-underline-offset: 4px;
 }
+
+/*game recaps*/
+.recap-container { max-width: 1000px; margin: auto; font-family: 'Arial', sans-serif; }
+.game-header { display: flex; justify-content: space-between; align-items: center; background: #111; color: #fff; }
+.score { font-size: 4rem; font-weight: bold; }
+.logo { width: 80px; height: 80px; }
+
+.goal-row { 
+    display: grid; 
+    grid-template-columns: 80px 40px 1fr 100px; 
+    padding: 15px; 
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+}
+
+.recap-section h3 {
+    background: #eee;
+    padding: 10px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* --- SCOPED BOX SCORE LAYOUT --- */
+.box-score-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+    margin: 30px 0 !important;
+    width: 100% !important;
+    align-items: flex-start !important;
+}
+
+.linescore-container {
+    flex: 1 1 !important; /* Grow, Shrink, Basis */
+    background-color: #111 !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+/* --- FORCE TABLE BEHAVIOR --- */
+.linescore-table {
+    display: table !important; /* Forces element to act as a table */
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    table-layout: fixed !important;
+}
+
+.linescore-table thead {
+    display: table-header-group !important;
+    background-color: #1a1a1a !important;
+}
+
+.linescore-table tbody {
+    display: table-row-group !important;
+}
+
+.linescore-table tr {
+    display: table-row !important;
+}
+
+.linescore-table th, 
+.linescore-table td {
+    display: table-cell !important;
+    padding: 12px 4px !important;
+    border-bottom: 1px solid #333 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    color: #fff !important;
+}
+
+/* Column Widths */
+.linescore-table th:first-child, 
+.linescore-table td:first-child {
+    width: 40% !important;
+    text-align: left !important;
+    padding-left: 16px !important;
+}
+
+.team-cell-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.mini-logo {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain !important;
+    flex-shrink: 0 !important;
+}
+
+.linescore-total {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    width: 50px !important;
+    font-weight: 800 !important;
+    color: #6dccc8 !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 850px) {
+    .box-score-wrapper {
+        flex-direction: column !important;
+    }
+    .linescore-container {
+        width: 100% !important;
+    }
+}

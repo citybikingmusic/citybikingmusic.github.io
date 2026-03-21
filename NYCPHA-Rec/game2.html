@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYCPHA Game Summary</title>
+    <style>
+        :root {
+            --nhl-black: #111111;
+            --nhl-white: #ffffff;
+            --nhl-gray: #aaaaaa;
+            --nhl-border: #333333;
+            --accent-green: #6dccc8;
+            --penalty-red: #ff4444;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--nhl-white);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .summary-wrapper { max-width: 900px; margin: auto; padding: 0 20px; }
+
+        /* --- GAME INFO HEADER --- */
+        .game-header {
+            background-color: var(--nhl-black);
+            border: 1px solid var(--nhl-border);
+            padding-bottom: 30px;
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .header-team { text-align: center; flex: 1; padding-inline: 20px;}
+        .header-team-name { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .header-score { font-size: 3rem; font-weight: 900; color: var(--accent-green); }
+
+        .header-details { text-align: center; flex: 1; border-left: 1px solid var(--nhl-border); border-right: 1px solid var(--nhl-border); padding-inline: 20px;}
+        .details-text { color: var(--nhl-gray); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0; }
+
+        /* --- LIST STYLING --- */
+        h2 {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 4px solid var(--accent-green);
+            padding-left: 12px;
+            margin: 40px 0 20px 0;
+        }
+
+        .row-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--nhl-black);
+            border-bottom: 1px solid var(--nhl-border);
+            padding: 16px 20px;
+        }
+
+        .left-section { display: flex; align-items: center; gap: 16px; }
+
+        .logo-circle {
+            width: 60px; height: 60px;
+            background: #252525; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid #444; flex-shrink: 0; overflow: hidden;
+        }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .name-stack { display: flex; flex-direction: column; }
+        .primary-text { font-size: 1.05rem; font-weight: 700; margin-bottom: 2px; }
+        .secondary-text { font-size: 0.85rem; color: var(--nhl-gray); }
+
+        .stats-section { display: flex; align-items: center; gap: 32px; }
+        .stat-box { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+        .stat-value { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .stat-label { font-size: 0.65rem; color: var(--nhl-gray); text-transform: uppercase; }
+
+        /* --- VIDEO PLAYER STYLES --- */
+        .video-drawer {
+            display: none;
+            background: #000;
+            padding: 10px;
+            border-bottom: 1px solid var(--nhl-border);
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
+        }
+        .play-btn {
+            background: none;
+            border: none;
+            color: var(--nhl-gray);
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .play-btn:hover { color: var(--accent-green); }
+        .play-btn.active { color: var(--accent-green); }
+        .no-video { opacity: 0.2; cursor: default; pointer-events: none; }
+
+        #loading { text-align: center; padding: 40px; color: var(--accent-green); }
+        /* --- RESPONSIVE FIX FOR SCORING & PENALTIES --- */
+@media (max-width: 700px) {
+    /* Stack the goal/penalty information vertically */
+    .row-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+        gap: 10px;
+    }
+
+    /* Ensure sections take up full width when stacked */
+    .left-section, 
+    .stats-section {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    /* Add a slight indentation or styling to the bottom stats so they look distinct */
+    .stats-section {
+        border-top: 1px solid #222;
+        padding-top: 10px;
+        display: flex;
+        justify-content: space-between; /* Keeps score and time on opposite ends */
+    }
+
+    /* Adjust the play button spacing when stacked */
+    .play-btn {
+        margin-right: 15px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="https://nycpha.org/">
+            <img src="assets/nycpha logo.png" alt="NYCPHA Logo" class="logo">
+        </a>
+    </div>
+
+<div class="container">
+        <h1 style="margin-bottom:0px;">Match Statistics</h1>
+        <h3 id="mainTitleSub" style="text-align:center; text-transform:uppercase; margin-top:0px;"></h3>
+</div>
+
+<div class="summary-wrapper">
+    <div id="loading">Loading Game Data...</div>
+
+    <div id="gameHeader" style="display: none;">
+        <div class="game-header">
+            <div class="header-team">
+                <div id="awayName" class="header-team-name">Away</div>
+                <div id="awayScore" class="header-score">0</div>
+            </div>
+            <div class="header-details">
+                <div id="gameTime" class="details-text">Time TBD</div>
+                <div id="gameDate" class="details-text">Date TBD</div>
+                <div id="gameRink" class="details-text">Rink TBD</div>
+                <div class="details-text" style="color: var(--accent-green); font-weight: bold;">FINAL</div>
+            </div>
+            <div class="header-team">
+                <div id="homeName" class="header-team-name">Home</div>
+                <div id="homeScore" class="header-score">0</div>
+            </div>
+        </div>
+    </div>
+
+   <div class="box-score-wrapper">
+    <link rel="stylesheet" href="PHAstyles.css">
+    <div id="linescore" class="linescore-container" style="display: none;">
+        <table class="linescore-table">
+            <thead>
+                <tr id="linescoreHeaderRow">
+                    <th>Team</th>
+                    <th>1</th><th>2</th><th>3</th>
+                    <th class="linescore-total">T</th>
+                </tr>
+            </thead>
+            <tbody id="linescoreBody"></tbody>
+        </table>
+    </div>
+
+    <div id="shotscore" class="linescore-container" style="display: none;">
+        <table class="linescore-table">
+            <thead>
+                <tr id="shotscoreHeaderRow">
+                    <th>Shots</th>
+                    <th>1</th><th>2</th><th>3</th>
+                    <th class="linescore-total">T</th>
+                </tr>
+            </thead>
+            <tbody id="shotscoreBody"></tbody>
+        </table>
+    </div>
+</div> 
+<div class="container">
+
+    <h2>Scoring Summary</h2>
+    <div id="goalList"></div>
+
+    <h2>Penalty Summary</h2>
+    <div id="penaltyList"></div>
+
+</div>
+
+    <div id="extraStatsContainer" class="box-score-wrapper" style="display: none;">
+        <div class="linescore-container">
+            <table class="linescore-table">
+                <tbody id="scorepoolBody"></tbody>
+            </table>
+        </div>
+        <div class="linescore-container">
+            <table class="linescore-table">
+                <tbody id="officialsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    
+
+<div id="miscInfoContainer" style="margin-top: 60px;">
+    <div id="miscBody" style="color: var(--nhl-white); font-size: 0.9rem; line-height: 1.8;"></div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyZHlLsFtfalTXqltP6DGk_tbPWPqGHQrh3v7rxu1vIDEKoK50LUj02HZI1W35dY0/exec";
+
+    const TEAM_LOGOS = {
+        "Pink Yetis": "assets/py.png",
+        "Fiesta Penguins": "assets/fp.png",
+        "default": "assets/nycpha logo.png"
+    };
+
+    function getLogo(teamName) { return TEAM_LOGOS[teamName] || TEAM_LOGOS["default"]; }
+    function formatInitial(first, last) { return (first && last) ? `${first.charAt(0)}. ${last}` : ""; }
+
+    function getEmbedUrl(url) {
+    if (!url) return null;
+
+    // YouTube Handling
+    if (url.includes('youtube.com/watch?v=')) {
+        return url.replace('watch?v=', 'embed/');
+    }
+    if (url.includes('youtu.be/')) {
+        return url.replace('youtu.be/', 'youtube.com/embed/');
+    }
+
+    // NEW: Google Drive Handling
+    // Converts /file/d/ID/view to /video/layout/preview?id=ID
+    if (url.includes('drive.google.com')) {
+        const driveIdMatch = url.match(/\/d\/(.+?)\/(view|edit|copy)/);
+        if (driveIdMatch && driveIdMatch[1]) {
+            return `https://drive.google.com/video/layout/preview?id=${driveIdMatch[1]}`;
+        }
+    }
+    
+    return url;
+}
+
+    function toggleVideo(id, url) {
+        const drawer = document.getElementById(`video-${id}`);
+        const btn = document.getElementById(`btn-${id}`);
+        const embedUrl = getEmbedUrl(url);
+
+        if (drawer.style.display === 'block') {
+            drawer.style.display = 'none';
+            drawer.innerHTML = `
+            <div class="video-wrapper">
+                <iframe 
+                    src="${embedUrl}" 
+                    allow="autoplay; fullscreen" 
+                    allowfullscreen="true" 
+                    webkitallowfullscreen="true" 
+                    mozallowfullscreen="true">
+                </iframe>
+            </div>`; 
+            btn.classList.remove('active');
+        } else {
+            // Close other open videos first (Optional but recommended)
+            document.querySelectorAll('.video-drawer').forEach(d => {
+                d.style.display = 'none';
+                d.innerHTML = '';
+            });
+            document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('active'));
+
+            drawer.style.display = 'block';
+            drawer.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="${embedUrl}?autoplay=1" allowfullscreen allow="autoplay"></iframe>
+                </div>`;
+            btn.classList.add('active');
+        }
+    }
+
+    function cleanTime(timeStr) {
+        if (!timeStr) return "00:00";
+        if (timeStr.includes("T")) {
+            const timePart = timeStr.split("T")[1];
+            const parts = timePart.split(":");
+            return `${parts[1]}:${parts[2].substring(0,2)}`;
+        }
+        if (timeStr.includes("1899")) {
+            const match = timeStr.match(/(\d{2}:\d{2}:\d{2})/);
+            if (match) {
+                const parts = match[0].split(":");
+                return `${parts[1]}:${parts[2]}`;
+            }
+        }
+        return timeStr;
+    }
+
+    async function fetchGameData() {
+        try {
+            const response = await fetch(SCRIPT_URL);
+            const data = await response.json();
+            
+            renderHeader(data.gameInfo);
+            renderLinescore(data); // Render Goals
+            renderShots(data);     // Render Shots
+            renderExtraTables(data);
+            renderScoring(data.scoring || []);
+            renderPenalties(data.penalties || []);
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('gameHeader').style.display = 'block';
+            document.getElementById('linescore').style.display = 'block';
+            document.getElementById('shotscore').style.display = 'block';
+        } catch (err) {
+            document.getElementById('loading').innerText = "Failed to load data.";
+        }
+    }
+
+    function renderHeader(info) {
+    if (!info) return;
+    document.getElementById('awayName').innerText = info.homeTeam || "Home";
+    document.getElementById('awayScore').innerText = info.homeScore ?? 0;
+    
+    document.getElementById('homeName').innerText = info.awayTeam || "Away";
+    document.getElementById('homeScore').innerText = info.awayScore ?? 0;
+    
+    document.getElementById('gameTime').innerText = info.gameTime;
+    document.getElementById('gameDate').innerText = info.date || "TBD";
+    document.getElementById('gameRink').innerText = info.rink || "TBD";
+    document.getElementById('mainTitleSub').innerText = `Game #${info.gameNumber}`;
+}
+
+    function renderScoring(goals) {
+        const list = document.getElementById('goalList');
+        list.innerHTML = goals.map((g, index) => {
+            const scorer = `${g.scorerFirstName} ${g.scorerLastName}`.trim() || "Unknown Player";
+            const a1 = formatInitial(g.assist1First, g.assist1Last);
+            const a2 = formatInitial(g.assist2First, g.assist2Last);
+            const assistStr = (a1 && a2) ? `${a1}, ${a2}` : (a1 || "Unassisted");
+            
+            const hasVideo = g.videoUrl && g.videoUrl.trim() !== "";
+            const videoAction = hasVideo ? `onclick="toggleVideo(${index}, '${g.videoUrl}')"` : "";
+
+            return `
+            <div class="goal-item">
+                <div class="row-container">
+                    <div class="left-section">
+                        <div class="logo-circle"><img src="${getLogo(g.team)}" alt="${g.team}"></div>
+                        <div class="name-stack">
+                            <div class="primary-text">${scorer}</div>
+                            <div class="secondary-text">${assistStr}</div>
+                        </div>
+                    </div>
+                    <div class="stats-section">
+                        <div class="stat-box"><div class="stat-value">${g.scoreAtTime}</div><div class="stat-label">Score</div></div>
+                        <div class="stat-box"><div class="stat-value">${g.time}</div><div class="stat-label">Time</div></div>
+                        <div class="stat-box"><div class="stat-value">${g.period}</div><div class="stat-label">Per</div></div>
+                        <button id="btn-${index}" class="play-btn ${!hasVideo ? 'no-video' : ''}" ${videoAction}>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2M9.5 16.5v-9l7 4.5z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="video-${index}" class="video-drawer"></div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderPenalties(penalties) {
+        const list = document.getElementById('penaltyList');
+        if (penalties.length === 0) {
+            list.innerHTML = '<div style="padding:20px; color:gray;">No penalties recorded.</div>';
+            return;
+        }
+        list.innerHTML = penalties.map(p => {
+            const pName = `${p.playerFirstName} ${p.playerLastName}`.trim() || "Unknown Player";
+            return `
+            <div class="row-container">
+                <div class="left-section">
+                    <div class="logo-circle"><img src="${getLogo(p.team)}" alt="${p.team}"></div>
+                    <div class="name-stack">
+                        <div class="primary-text">${pName}</div>
+                        <div class="secondary-text" style="color:var(--penalty-red)">${p.infraction}</div>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <div class="stat-box">
+                        <div class="stat-value">${p.pim} min</div>
+                        <div class="stat-label">PIM</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${cleanTime(p.time)}</div>
+                        <div class="stat-label">Time</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${p.period}</div>
+                        <div class="stat-label">Per</div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderLinescore(data) {
+    const headerRow = document.getElementById('linescoreHeaderRow');
+    const body = document.getElementById('linescoreBody');
+    const ls = data.linescore;
+    const info = data.gameInfo;
+
+    headerRow.innerHTML = `
+        <th style="text-align:left; padding-left:16px;">Linescore</th>
+        <th>1st</th><th>2nd</th><th>3rd</th>
+        ${ls.isOvertime ? '<th>OT</th>' : ''}
+        <th class="linescore-total">T</th>
+    `;
+
+    const teams = [
+        { name: info.homeTeam, scores: ls.home, total: info.homeScore },
+        { name: info.awayTeam, scores: ls.away, total: info.awayScore }
+    ];
+
+    body.innerHTML = teams.map(t => `
+        <tr>
+            <td>
+                <div class="team-cell-wrapper">
+                    <img src="${getLogo(t.name)}" class="mini-logo">
+                    <span class="team-abbr">${t.name}</span>
+                </div>
+            </td>
+            <td>${t.scores[0] || 0}</td>
+            <td>${t.scores[1] || 0}</td>
+            <td>${t.scores[2] || 0}</td>
+            ${ls.isOvertime ? `<td>${t.scores[3] || 0}</td>` : ''}
+            <td class="linescore-total">${t.total}</td>
+        </tr>
+    `).join('');
+    }
+
+    function renderShots(data) {
+    const headerRow = document.getElementById('shotscoreHeaderRow');
+    const body = document.getElementById('shotscoreBody');
+    const shots = data.shots;
+    const ls = data.linescore;
+    const info = data.gameInfo;
+
+    headerRow.innerHTML = `
+        <th style="text-align:left; padding-left:16px;">Shots on Goal</th>
+        <th>1st</th><th>2nd</th><th>3rd</th>
+        ${ls.isOvertime ? '<th>OT</th>' : ''}
+        <th class="linescore-total">T</th>
+    `;
+
+    const teams = [
+        { name: info.homeTeam, scores: shots.home, total: shots.home.reduce((a, b) => a + b, 0) },
+        { name: info.awayTeam, scores: shots.away, total: shots.away.reduce((a, b) => a + b, 0) }
+    ];
+
+    body.innerHTML = teams.map(t => `
+        <tr>
+            <td>
+                <div class="team-cell-wrapper">
+                    <img src="${getLogo(t.name)}" class="mini-logo">
+                    <span class="team-abbr">${t.name}</span>
+                </div>
+            </td>
+            <td>${t.scores[0]}</td>
+            <td>${t.scores[1]}</td>
+            <td>${t.scores[2]}</td>
+            ${ls.isOvertime ? `<td>${t.scores[3]}</td>` : ''}
+            <td class="linescore-total">${t.total}</td>
+        </tr>
+    `).join('');
+    }
+
+    function renderExtraTables(data) {
+    const spBody = document.getElementById('scorepoolBody');
+    const offBody = document.getElementById('officialsBody');
+    
+    // Render Scorepool
+    spBody.innerHTML = data.scorepool.map(row => `
+        <tr>
+            <td style="padding-left:16px;">${row.label}</td>
+            <td style="text-align:right; padding-right:16px;">${row.value}</td>
+        </tr>
+    `).join('');
+
+    // Render Officials
+    offBody.innerHTML = data.officials.map(row => `
+        <tr>
+            <td style="padding-left:16px;">${row.position}</td>
+            <td style="text-align:right; padding-right:16px;">${row.name}</td>
+        </tr>
+    `).join('');
+
+    // Render Misc Info as a text list
+const miscBody = document.getElementById('miscBody');
+
+miscBody.innerHTML = data.miscInfo.map((row, index) => {
+    // Join columns with ": " only if the current column has a value AND there is a value in any subsequent column
+    const lineText = row.map((cell, i) => {
+        const trimmedCell = cell.trim();
+        if (!trimmedCell) return "";
+        
+        // Check if any of the remaining columns in this row have data
+        const hasFollowUp = row.slice(i + 1).some(nextCell => nextCell.trim() !== "");
+        
+        return hasFollowUp ? trimmedCell + ": " : trimmedCell;
+    }).join("").trim();
+    
+    // Only return if the line isn't empty
+    if (!lineText) return '';
+
+    // If it's the first row, wrap in H3 with specific styles; otherwise use a div
+    return index === 0 
+        ? `<h3 style="color: var(--nhl-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; margin-bottom: 15px; border-bottom: 1px solid var(--nhl-border); padding-bottom: 5px;">${lineText}</h3>`
+        : `<div style="margin-bottom: 8px;">${lineText}</div>`;
+}).join('');
+
+document.getElementById('extraStatsContainer').style.display = 'flex';
+    }
+
+    window.onload = fetchGameData;
+</script>
+
+</body>
+</html>
