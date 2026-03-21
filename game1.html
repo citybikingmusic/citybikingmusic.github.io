@@ -264,7 +264,7 @@
         return url.replace('youtu.be/', 'youtube.com/embed/');
     }
 
-    // Handle Google Drive
+    // Google Drive - Direct Stream Logic
     if (url.includes('drive.google.com')) {
         let fileId = "";
         if (url.includes('/d/')) {
@@ -273,9 +273,9 @@
             fileId = url.split('id=')[1].split('&')[0];
         }
         
-        // Use the 'uc' (User Content) export link instead of /preview
-        // This is often allowed by CSP when the full UI is blocked
-        return `https://drive.google.com/uc?export=download&id=${fileId}`;
+        // This is the direct stream link. It bypasses the Google Drive "Player UI"
+        // which is what usually triggers the CSP/404 errors on deployed sites.
+        return `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
     
     return url;
