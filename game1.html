@@ -185,7 +185,7 @@
     </div>
 
    <div class="box-score-wrapper">
-    <link rel="stylesheet" href="NYCPHA-Rec/PHAstyles.css">
+    <link rel="stylesheet" href="PHAstyles.css">
     <div id="linescore" class="linescore-container" style="display: none;">
         <table class="linescore-table">
             <thead>
@@ -277,53 +277,39 @@
 }
 
     function toggleVideo(id, url) {
-    const drawer = document.getElementById(`video-${id}`);
-    const btn = document.getElementById(`btn-${id}`);
-    const embedUrl = getEmbedUrl(url);
+        const drawer = document.getElementById(`video-${id}`);
+        const btn = document.getElementById(`btn-${id}`);
+        const embedUrl = getEmbedUrl(url);
 
-    if (drawer.classList.contains('active')) {
-        drawer.classList.remove('active');
-        btn.classList.remove('active');
-        // Clear the iframe after the 0.5s pull-up animation finishes
-        setTimeout(() => {
-            if (!drawer.classList.contains('active')) drawer.innerHTML = '';
-        }, 500);
-    } else {
-        // 1. Close others
-        document.querySelectorAll('.video-drawer').forEach(d => d.classList.remove('active'));
-        document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('active'));
-
-        // 2. Add the active class FIRST (starts the push-down animation)
-        drawer.classList.add('active');
-        btn.classList.add('active');
-
-        // 3. Wait 100ms for the animation to be underway before injecting the iframe
-        // This prevents the "preloaded but not used" warning
-        setTimeout(() => {
+        if (drawer.style.display === 'block') {
+            drawer.style.display = 'none';
             drawer.innerHTML = `
-                <div class="video-wrapper" style="padding: 10px;">
-                    <iframe 
-                        src="${embedUrl}?autoplay=1" 
-                        allowfullscreen 
-                        allow="autoplay"
-                        style="border:none; width:100%; height:100%;">
-                    </iframe>
+            <div class="video-wrapper">
+                <iframe 
+                    src="${embedUrl}" 
+                    allow="autoplay; fullscreen" 
+                    allowfullscreen="true" 
+                    webkitallowfullscreen="true" 
+                    mozallowfullscreen="true">
+                </iframe>
+            </div>`; 
+            btn.classList.remove('active');
+        } else {
+            // Close other open videos first (Optional but recommended)
+            document.querySelectorAll('.video-drawer').forEach(d => {
+                d.style.display = 'none';
+                d.innerHTML = '';
+            });
+            document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('active'));
+
+            drawer.style.display = 'block';
+            drawer.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="${embedUrl}?autoplay=1" allowfullscreen allow="autoplay"></iframe>
                 </div>`;
-        }, 100);
+            btn.classList.add('active');
+        }
     }
-    setTimeout(() => {
-    drawer.innerHTML = `
-        <div class="video-wrapper" style="padding: 10px;">
-            <iframe 
-                src="${embedUrl}?autoplay=1" 
-                allowfullscreen 
-                allow="autoplay; encrypted-media" 
-                sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-                style="border:none; width:100%; height:100%;">
-            </iframe>
-        </div>`;
-}, 100);
-}
 
     function cleanTime(timeStr) {
         if (!timeStr) return "00:00";
