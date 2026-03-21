@@ -88,6 +88,14 @@
             background: #000;
             padding: 10px;
             border-bottom: 1px solid var(--nhl-border);
+            height: 0;
+            overflow: hidden;
+            transition: height 0.5s ease;
+            background-color: #000;
+        }
+
+        .video-drawer.active {
+            height: 500px; /* Or whatever height fits your 480px iframe + padding */
         }
         .video-wrapper {
             position: relative;
@@ -278,21 +286,31 @@
 }
 
     function toggleVideo(id, url) {
+    console.log("Toggling video for ID:", id, "URL:", url); // Debug line
+    
     const drawer = document.getElementById(`video-${id}`);
     const btn = document.getElementById(`btn-${id}`);
+    
+    if (!drawer || !btn) {
+        console.error("Could not find drawer or button element for ID:", id);
+        return;
+    }
+
     const embedUrl = getEmbedUrl(url);
 
     if (drawer.classList.contains('active')) {
         drawer.classList.remove('active');
         btn.classList.remove('active');
         // Clear content after animation
-        setTimeout(() => { if (!drawer.classList.contains('active')) drawer.innerHTML = ''; }, 500);
+        setTimeout(() => { 
+            if (!drawer.classList.contains('active')) drawer.innerHTML = ''; 
+        }, 500);
     } else {
-        // Close others
+        // Close other open drawers first
         document.querySelectorAll('.video-drawer').forEach(d => d.classList.remove('active'));
         document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('active'));
 
-        // Inject the EXACT iframe code that you confirmed is working
+        // Inject the EXACT iframe code you confirmed works
         drawer.innerHTML = `
             <div class="video-wrapper" style="padding: 10px; background: #000; display: flex; justify-content: center;">
                 <iframe 
@@ -304,10 +322,11 @@
                 </iframe>
             </div>`;
         
+        // Trigger the CSS animation
         drawer.classList.add('active');
         btn.classList.add('active');
     }
-    }
+}
 
     function cleanTime(timeStr) {
         if (!timeStr) return "00:00";
