@@ -267,15 +267,15 @@
     // Handle Google Drive
     if (url.includes('drive.google.com')) {
         let fileId = "";
-        // Extract ID from standard link or viewer link
         if (url.includes('/d/')) {
             fileId = url.split('/d/')[1].split('/')[0];
         } else if (url.includes('id=')) {
             fileId = url.split('id=')[1].split('&')[0];
         }
         
-        // Use /preview for maximum compatibility and to prevent preload errors
-        return `https://drive.google.com/file/d/${fileId}/preview`;
+        // Use the 'uc' (User Content) export link instead of /preview
+        // This is often allowed by CSP when the full UI is blocked
+        return `https://drive.google.com/uc?export=download&id=${fileId}`;
     }
     
     return url;
@@ -316,6 +316,18 @@
                 </div>`;
         }, 100);
     }
+    setTimeout(() => {
+    drawer.innerHTML = `
+        <div class="video-wrapper" style="padding: 10px;">
+            <iframe 
+                src="${embedUrl}?autoplay=1" 
+                allowfullscreen 
+                allow="autoplay; encrypted-media" 
+                sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+                style="border:none; width:100%; height:100%;">
+            </iframe>
+        </div>`;
+}, 100);
 }
 
     function cleanTime(timeStr) {
