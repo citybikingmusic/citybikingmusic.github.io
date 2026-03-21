@@ -553,7 +553,7 @@ miscBody.innerHTML = data.miscInfo.map((row, index) => {
     // If it's the first row, wrap in H3 with specific styles; otherwise use a div
     return index === 0 
         ? `<h3 style="color: var(--nhl-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; margin-bottom: 15px; border-bottom: 1px solid var(--nhl-border); padding-bottom: 5px;">${lineText}</h3>`
-        : `<div style="margin-bottom: 8px;">${lineText}</div>`;
+        : `<div style="margin-bottom: 8px; font-size: 12px;">${lineText}</div>`;
 }).join('');
 
 document.getElementById('extraStatsContainer').style.display = 'flex';
