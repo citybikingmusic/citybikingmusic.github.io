@@ -88,14 +88,6 @@
             background: #000;
             padding: 10px;
             border-bottom: 1px solid var(--nhl-border);
-            height: 0;
-            overflow: hidden;
-            transition: height 0.5s ease;
-            background-color: #000;
-        }
-
-        .video-drawer.active {
-            height: 500px; /* Or whatever height fits your 480px iframe + padding */
         }
         .video-wrapper {
             position: relative;
@@ -156,12 +148,13 @@
     }
 }
     </style>
+    <link rel="stylesheet" href="PHAstyles.css">
 </head>
 <body>
 
     <div class="header">
         <a href="https://nycpha.org/">
-            <img src="NYCPHA-Rec/assets/nycpha logo.png" alt="NYCPHA Logo" class="logo">
+            <img src="assets/nycpha logo.png" alt="NYCPHA Logo" class="logo">
         </a>
     </div>
 
@@ -193,7 +186,7 @@
     </div>
 
    <div class="box-score-wrapper">
-    <link rel="stylesheet" href="NYCPHA-Rec/PHAstyles.css">
+    <link rel="stylesheet" href="PHAstyles.css">
     <div id="linescore" class="linescore-container" style="display: none;">
         <table class="linescore-table">
             <thead>
@@ -253,64 +246,71 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw59jDR6xEeAljsogMGl68GrI5rNLZ418K3SSWab5OvvWpV54YW9HRXnH9_OhtA6qE/exec";
 
     const TEAM_LOGOS = {
-        "Pink Yetis": "NYCPHA-Rec/assets/py.png",
-        "Fiesta Penguins": "NYCPHA-Rec/assets/fp.png",
-        "default": "NYCPHA-Rec/assets/nycpha logo.png"
+        "Pink Yetis": "assets/py.png",
+        "Fiesta Penguins": "assets/fp.png",
+        "default": "assets/nycpha logo.png"
     };
 
     function getLogo(teamName) { return TEAM_LOGOS[teamName] || TEAM_LOGOS["default"]; }
     function formatInitial(first, last) { return (first && last) ? `${first.charAt(0)}. ${last}` : ""; }
 
     function getEmbedUrl(url) {
-    if (!url) return '';
-    
-    // YouTube logic
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        const videoId = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
-        return `https://www.youtube.com/embed/${videoId}`;
+    if (!url) return null;
+
+    // YouTube Handling
+    if (url.includes('youtube.com/watch?v=')) {
+        return url.replace('watch?v=', 'embed/');
     }
-    
-   // Handle Google Drive - Converting to the /preview format
+    if (url.includes('youtu.be/')) {
+        return url.replace('youtu.be/', 'youtube.com/embed/');
+    }
+
+    // NEW: Google Drive Handling
+    // Converts /file/d/ID/view to /video/layout/preview?id=ID
     if (url.includes('drive.google.com')) {
-        let fileId = "";
-        if (url.includes('/d/')) {
-            fileId = url.split('/d/')[1].split('/')[0];
-        } else if (url.includes('id=')) {
-            fileId = url.split('id=')[1].split('&')[0];
+        const driveIdMatch = url.match(/\/d\/(.+?)\/(view|edit|copy)/);
+        if (driveIdMatch && driveIdMatch[1]) {
+            return `https://drive.google.com/video/layout/preview?id=${driveIdMatch[1]}`;
         }
-        return `https://drive.google.com/file/d/${fileId}/preview`;
     }
     
     return url;
 }
 
     function toggleVideo(id, url) {
-    const drawer = document.getElementById(`video-${id}`);
-    const iframe = document.getElementById(`iframe-${id}`);
-    const btn = document.getElementById(`btn-${id}`);
-    const embedUrl = getEmbedUrl(url);
+        const drawer = document.getElementById(`video-${id}`);
+        const btn = document.getElementById(`btn-${id}`);
+        const embedUrl = getEmbedUrl(url);
 
-    if (drawer.classList.contains('active')) {
-        drawer.classList.remove('active');
-        btn.classList.remove('active');
-        // Stop the video when closed
-        setTimeout(() => { 
-            iframe.src = ""; 
-            iframe.style.display = "none";
-        }, 500);
-    } else {
-        // Close others
-        document.querySelectorAll('.video-drawer').forEach(d => d.classList.remove('active'));
-        document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('active'));
+        if (drawer.style.display === 'block') {
+            drawer.style.display = 'none';
+            drawer.innerHTML = `
+            <div class="video-wrapper">
+                <iframe 
+                    src="${embedUrl}" 
+                    allow="autoplay; fullscreen" 
+                    allowfullscreen="true" 
+                    webkitallowfullscreen="true" 
+                    mozallowfullscreen="true">
+                </iframe>
+            </div>`; 
+            btn.classList.remove('active');
+        } else {
+            // Close other open videos first (Optional but recommended)
+            document.querySelectorAll('.video-drawer').forEach(d => {
+                d.style.display = 'none';
+                d.innerHTML = '';
+            });
+            document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('active'));
 
-        // Just update the existing iframe's source and show it
-        iframe.src = embedUrl;
-        iframe.style.display = "block";
-        
-        drawer.classList.add('active');
-        btn.classList.add('active');
+            drawer.style.display = 'block';
+            drawer.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="${embedUrl}?autoplay=1" allowfullscreen allow="autoplay"></iframe>
+                </div>`;
+            btn.classList.add('active');
+        }
     }
-}
 
     function cleanTime(timeStr) {
         if (!timeStr) return "00:00";
@@ -374,26 +374,6 @@
             
             const hasVideo = g.videoUrl && g.videoUrl.trim() !== "";
             const videoAction = hasVideo ? `onclick="toggleVideo(${index}, '${g.videoUrl}')"` : "";
-            // Inside your loop where you generate the scoring rows:
-const goalId = `goal-${i}`;
-goalItem.innerHTML = `
-    <div class="row-container">
-        ... your player info ...
-        ${item.videoUrl ? `<button id="btn-${goalId}" class="play-btn" onclick="toggleVideo('${goalId}', '${item.videoUrl}')">WATCH</button>` : ''}
-    </div>
-    <div id="video-${goalId}" class="video-drawer">
-        <div class="video-wrapper" style="padding: 10px; background: #000; display: flex; justify-content: center;">
-            <iframe 
-                id="iframe-${goalId}"
-                src="" 
-                width="640" 
-                height="480" 
-                allow="autoplay" 
-                style="border:none; max-width: 100%; display: none;">
-            </iframe>
-        </div>
-    </div>
-`;
 
             return `
             <div class="goal-item">
